@@ -8,7 +8,10 @@ app.engine('html', engines.mustache);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
-app.set('port', 3000);
+
+var port = process.env.PORT || 3000;
+app.set('port', port);
+
 
 app.get('*', function(request, response) {
   response.render('index.html');
