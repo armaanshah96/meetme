@@ -1,6 +1,15 @@
 var express = require('express');
 var engines = require('consolidate');
 var path = require('path');
+var bodyParser = require('body-parser');
+
+// var Groups = require('./models/groups');
+var mongoose = require('mongoose');
+var Env = require('dotenv');
+var fs = require('fs');
+var GroupController = require('./controllers/GroupController');
+
+Env.load();
 
 var app = new express();
 
@@ -12,6 +21,13 @@ app.use(express.static(__dirname + '/public'));
 var port = process.env.PORT || 3000;
 app.set('port', port);
 
+// for parsing application/json
+app.use(bodyParser.json());
+
+// for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use('/groups', GroupController);
 
 app.get('*', function(request, response) {
   response.render('index.html');
