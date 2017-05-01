@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var Env = require('dotenv');
 var fs = require('fs');
 var GroupController = require('./controllers/GroupController');
+var UserController = require('./controllers/UserController');
 
 Env.load();
 
@@ -28,6 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/groups', GroupController);
+app.use('/users', UserController);
 
 app.get('*', function(request, response) {
   response.render('index.html');

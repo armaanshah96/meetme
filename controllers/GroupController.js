@@ -27,6 +27,16 @@ router.post('/', function(req, res) {
 	});
 });
 
+// Returns a JSON of all entries in the database 
+router.get('/', function(req, res) {
+	Groups.find(function (err, db) {
+		if (err) res.status(500).json({ error: err });
+		else {
+			res.status(200).json(db);
+		}
+	});
+});
+
 router.get('/:id', function(req, res) {
 	Groups.findOne({ _id: req.params.id }, function(err, group) {
 		if (err) res.status(500).json({ error: err });
