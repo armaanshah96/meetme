@@ -27,6 +27,7 @@ router.post('/', function(req, res) {
 	});
 });
 
+
 // Returns a JSON of all entries in the database 
 router.get('/', function(req, res) {
 	Groups.find(function (err, db) {
@@ -45,6 +46,7 @@ router.get('/:id', function(req, res) {
 		}
 	});
 });
+
 
 router.get('/:id/cal', function(req, res) {
 	Groups.findOne({ _id: req.params.id }, function(err, group) {
