@@ -1,36 +1,29 @@
 var express = require('express');
-var Groups = require('../models/groups');
+var Users = require('../models/users');
 
 const router = express.Router();
 
-/*
-  /boards -- GET/POST
-  /boards/:id -- GET/DELETE
-              -- PATCH --> currently only works for patching the name of the board
-*/
 
 router.post('/', function(req, res) {
-	var newGroup = new Groups({
-		title: req.body.title,
-		startDate: req.body.startDate,
-		endDate: req.body.endDate,
+	var newUser = new Users({
+		username: req.body.username,
+		password: req.body.password,
 		link: req.body.link,
 		calendar: req.body.calendar,
 	});
 
-	newGroup.save(function(err) {
+	newUser.save(function(err) {
 		if (err) res.status(500).json({ error: err });
 		else {
-			console.log('Saved Group!');
-			res.status(200).json(newGroup);
+			console.log('Saved User!');
+			res.status(200).json(newUser);
 		}
 	});
 });
 
-
 // Returns a JSON of all entries in the database 
 router.get('/', function(req, res) {
-	Groups.find(function (err, db) {
+	Users.find(function (err, db) {
 		if (err) res.status(500).json({ error: err });
 		else {
 			res.status(200).json(db);
@@ -39,22 +32,26 @@ router.get('/', function(req, res) {
 });
 
 router.get('/:id', function(req, res) {
-	Groups.findOne({ _id: req.params.id }, function(err, group) {
+	Users.findOne({ _id: req.params.id }, function(err, user) {
 		if (err) res.status(500).json({ error: err });
 		else {
-			res.status(200).json(group);
+			res.status(200).json(user);
 		}
 	});
 });
 
-
 router.get('/:id/cal', function(req, res) {
-	Groups.findOne({ _id: req.params.id }, function(err, group) {
+	Users.findOne({ _id: req.params.id }, function(err, user) {
 		if (err) res.status(500).json({ error: err });
 		else {
-			res.status(200).json(group.calendar);
+			res.status(200).json(user.calendar);
 		}
 	});
+});
+
+router.get('/:id/done', function(req, res) {
+	/* To be implemented */
+	res.status(200).json("Adds individual calendar to group calendar. Returns group calendar.");
 });
 
 
