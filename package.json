@@ -13,6 +13,8 @@
     "consolidate": "^0.14.5",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
+    "google-auth-library": "^0.10.0",
+    "googleapis": "^19.0.0",
     "mongoose": "^4.9.6",
     "mustache": "^2.3.0",
     "path": "^0.12.7"
