@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var Env = require('dotenv');
 var fs = require('fs');
-var mustache = require('mustache express');
+//var mustache = require('express-mustache');
 
 var GroupController = require('./controllers/GroupController');
 
@@ -20,7 +20,9 @@ var app = new express();
 
 app.engine('html', engines.mustache);
 //app.engine('html', mustacheExpress());
-app.use(express.static(path.join(__dirname, '/public')));
+// Static files are accessible from both public and node_modules directories
+app.use('/public', express.static(path.join(__dirname, '/public')));
+app.use('/node_modules', express.static(path.join(__dirname, '/node_modules')));
 app.set('view engine', 'html');
 //app.set('view engine', 'mustache');
 app.set('views', __dirname + '/views');
@@ -41,10 +43,11 @@ app.use('/users', UserController);
 app.get('/', function(request, response) {
   response.render('index.html');
 });
-/*
-app.get('/tester', function(request, response) {
-  response.render('tester.html');
-});*/
+
+
+app.get('/fillCal', function(request, response) {
+  response.render('fillCal.html');
+});
 
 app.listen(app.get('port'), function() {
   console.log('Express app listening on port ' + app.get('port'));
