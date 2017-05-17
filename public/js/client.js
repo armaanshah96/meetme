@@ -1,3 +1,36 @@
+//<!--
+//            <div id="times">
+//                <h4>Enter Times of Interest</h4>
+//                <div>
+//                    <input id=startTime type="text" placeholder="StartTime" >
+//                    <select class=ampm>
+//                      <option value="am">AM</option>
+//                      <option value="pm">PM</option>
+//                    </select>
+//                </div>
+//                <div>
+//                    <input id=endTime type="text" placeholder="EndTime" >
+//                    <select class=ampm>
+//                      <option value="am">AM</option>
+//                      <option value="pm">PM</option>
+//                    </select>
+//                </div>
+//            </div>
+//            <div id="numPeople">
+//                <p>
+//                    Number of people
+//                    <input type="text">
+//                </p>
+//                
+//            </div>
+//            <div id="create">
+//                <input type="button" value="Preview" id="preview">
+//                <input type="submit" value="Create" id="create">
+//            </div>
+//        </div>
+//-->
+
+
 //var startDate;
 //var endDate;
 //
@@ -52,3 +85,25 @@
 //    startTime = t1;
 //}
 //document.getElementsByClassName(names)
+//var isMouseDown = false
+//var changeBackground = function(date) {
+//    if(isMouseDown) {    
+//        if((' ' + date.className + ' ').indexOf(' highlighted ') > -1) {
+//            date.className = 'date';
+//        } else {
+//            date.className += ' highlighted';
+//        }
+//    }
+//}
+//var dateClick = function(date) {
+//    isMouseDown = true;
+//    changeBackground(date);
+//}
+//// handle outside div mouse down -- natural motion
+//document.body.onmousedown = function() {
+//    isMouseDown = true;
+//};
+//document.body.onmouseup = function() {
+//    isMouseDown = false;
+//};
+//

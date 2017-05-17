@@ -35,8 +35,17 @@ app.use('/groups', GroupController);
 app.use('/users', UserController);
 
 
-app.get('*', function(request, response) {
-  response.render('index.html');
+app.get('/', function(request, response) {
+    var data = {
+        dateRows: [
+            { dates : [1,2,3,4,5,6,7] }, 
+            { dates : [8,9,10,11,12,13,14] }, 
+            { dates : [15,16,17,18,19,20,21] },
+            { dates : [22,23,24,25,26,27,28] },
+            { dates : [29,30,31] }
+        ]
+    };
+  response.render('index', data);
 });
 
 app.listen(app.get('port'), function() {

@@ -2,11 +2,8 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../public/styles.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-    <script src='../node_modules/jquery/dist/jquery.min.js'></script>
-    <script src='../node_modules/moment/min/moment.min.js'></script>
-
+    <link rel="stylesheet" href="/styles.css">
     <title>title</title>
   </head>
   <body>
@@ -16,91 +13,20 @@
                 <h4>Enter Dates of Interest</h4>
             </div>
             <div class="select-dates">
-                <div class="row">
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">1</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">2</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">3</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">4</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">5</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">6</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">7</div>
-                </div>
-                <div class="row">
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">8</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">9</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">10</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">11</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">12</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">13</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">14</div>
-                </div>
-                <div class="row">
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">15</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">16</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">17</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">18</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">19</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">20</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">21</div>
-                </div>
-                <div class="row">
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">22</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">23</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">24</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">25</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">26</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">27</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">28</div>
-                </div>
-                <div class="row">
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">29</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">30</div>
-                    <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">31</div>
-                </div>
+                {{#dateRows}}
+                    <div class="row">
+                        {{#dates}}
+                        <div class="date" onmousedown="dateClick(this)" onmouseover="changeBackground(this)">
+                            {{.}}
+                        </div>
+                        {{/dates}}
+                    </div>
+                {{/dateRows}}
             </div>
-            <div id="times">
-                <h4>Enter Times of Interest</h4>
-                <div>
-                    <input id=startTime type="text" placeholder="StartTime" >
-                    <select class=ampm>
-                      <option value="am">AM</option>
-                      <option value="pm">PM</option>
-                    </select>
-                </div>
-                <div>
-                    <input id=endTime type="text" placeholder="EndTime" >
-                    <select class=ampm>
-                      <option value="am">AM</option>
-                      <option value="pm">PM</option>
-                    </select>
-                </div>
-            </div>
-            <div id="numPeople">
-                <p>
-                    Number of people
-                    <input type="text">
-                </p>
-                
-            </div>
-            <div id="create">
-                <input type="button" value="Preview" id="preview">
-                <input type="submit" value="Create" id="create">
-            </div>
-        </div>
       </div>
-    <script src='../public/js/client.js'></script>
-    <script>
-        isMouseDown = false
-        document.body.onmousedown = function() {
-            isMouseDown = true;
-        };
-        var dateClick = function(date) {
-            isMouseDown = true;
-            changeBackground(date);
-        }
-        document.body.onmouseup = function() {
-            isMouseDown = false;
-        };
+  </body>
+      <script>
+        var isMouseDown = false
         var changeBackground = function(date) {
             if(isMouseDown) {    
                 if((' ' + date.className + ' ').indexOf(' highlighted ') > -1) {
@@ -110,6 +36,16 @@
                 }
             }
         }
-    </script>
-  </body>
+        var dateClick = function(date) {
+            isMouseDown = true;
+            changeBackground(date);
+        }
+        // handle outside div mouse down -- natural motion
+        document.body.onmousedown = function() {
+            isMouseDown = true;
+        };
+        document.body.onmouseup = function() {
+            isMouseDown = false;
+        };
+      </script>
 </html>
