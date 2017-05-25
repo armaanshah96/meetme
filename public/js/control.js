@@ -1,6 +1,13 @@
 $(document).ready(function() {
+	$('.testSend').click(function() {
+		$.get('http://localhost:3000/groups/591c73da47cbef756ce077fa/cal', {}, function(data) {
+			console.log(data);
+		});
+	});
+	
 	var eventInput;
 
+	// Initialize OAuth
 	handleClientLoad();
 
 	// Store today's date
@@ -9,8 +16,8 @@ $(document).ready(function() {
 	var m = date.getMonth();
 	var y = date.getFullYear();
 
-	//Initialize calendar
-	var calendar = $('#calendar').fullCalendar({
+	//Initialize individual calendar
+	var calendar_ind = $('#calendar-ind').fullCalendar({
 		// Create header - lets you switch calendar views
 			// Values separated by comma will be adjacent, separated by a space will have a small gap in between
 			// Note that these values are predefined templates, not personal names
@@ -32,7 +39,7 @@ $(document).ready(function() {
 		// Runs when user selects a timeslot
 		select: function(start, end, allDay) {
 
-			calendar.fullCalendar('renderEvent',
+			calendar_ind.fullCalendar('renderEvent',
 				{
 					title: "",
 					start: start,
@@ -42,7 +49,58 @@ $(document).ready(function() {
 				true // makes event stay permanently fixed - won't disappear if you go to another calendar page
 			);
 
-			calendar.fullCalendar('unselect');
+			calendar_ind.fullCalendar('unselect');
+
+		},
+
+		// Can change duration of event, move it around
+		editable: true,
+
+		// Pre-define events on calendar
+		events: eventInput,
+
+
+	});
+
+
+	//Initialize group calendar
+	//var groupEvents = getGroupEvents().parseGroupEvents();
+	
+
+
+	var calendar_group = $('#calendar-group').fullCalendar({
+		// Create header - lets you switch calendar views
+			// Values separated by comma will be adjacent, separated by a space will have a small gap in between
+			// Note that these values are predefined templates, not personal names
+		header: {
+			left: 'prev,next today', // text containing the current month/week/day
+			center: 'title',
+			right: 'month, agendaWeek, agendaDay'
+		},
+
+		defaultView:'agendaWeek',
+
+		// Lets users highlight a timeslot by clicking and dragging
+		selectable: true,
+		// Creates a colored box while user is dragging
+		selectHelper: true,
+		//Whether clicking elsewhere will cause current selection to be cleared
+		unselectAuto: false,
+
+		// Runs when user selects a timeslot
+		select: function(start, end, allDay) {
+
+			calendar_group.fullCalendar('renderEvent',
+				{
+					title: "",
+					start: start,
+					end: end,
+					allDay: false
+				},
+				true // makes event stay permanently fixed - won't disappear if you go to another calendar page
+			);
+
+			calendar_group.fullCalendar('unselect');
 
 		},
 
@@ -69,6 +127,34 @@ $(document).ready(function() {
 	var signoutButton = document.getElementById('signout-button');
 
 	var parsedtext = "";
+
+
+
+
+
+
+
+
+
+
+	// *****************  FUNCTIONS *************************
+
+	function getGroupEvents() {
+		// query database and get the entry with the given link
+	}
+
+	function parseGroupEvents() {
+		// parse group database entry into FullCalendar events 
+		// determine colors for number of people available 
+	}
+
+	function combineEvents() {
+		// combine events from group events and just added individual events 
+		// at the end, replace the group database entry's calendar with this combined calendar 
+	}
+
+
+	// -------- OAuth Functions ----------------
 
 	/**
 	 *  On load, called to load the auth2 library and API client library.
@@ -107,12 +193,13 @@ $(document).ready(function() {
 	  if (isSignedIn) {
 	    authorizeButton.style.display = 'none';
 	    signoutButton.style.display = 'block';
-			parseGCal().then(function(event_list) {
-				//if you re-authorize, removes all current events
-				$('#calendar').fullCalendar( 'removeEvents');
-				$('#calendar').fullCalendar( 'renderEvents', event_list, true);
-			});
-			return true;
+		parseGCal().then(function(event_list) {
+			//if you re-authorize, removes all current events
+			$('#calendar-ind').fullCalendar( 'removeEvents');
+			$('#calendar-ind').fullCalendar( 'renderEvents', event_list, true);
+			$('#calendar-group').fullCalendar( 'renderEvents', event_list, true);
+		});
+		return true;
 	  } else {
 	    authorizeButton.style.display = 'block';
 	    signoutButton.style.display = 'none';
@@ -136,7 +223,7 @@ $(document).ready(function() {
 
 
 
-	// Print parsed code that will be passed into FullCalendar
+	// Parse gCal events to FullCalendar events
 	function parseGCal() {
 	  parsedText = "";
 	  return gapi.client.calendar.events.list({

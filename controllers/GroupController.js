@@ -53,6 +53,7 @@ router.get('/:id/cal', function(req, res) {
 		if (err) res.status(500).json({ error: err });
 		else {
 			res.status(200).json(group.calendar);
+			res.write(group.calendar); 
 		}
 	});
 });
