@@ -14,13 +14,13 @@ var groupSchema = new Schema({
 	startDate: Date,
 	endDate: Date,
 	link: String,
-	calendar: [{
-		event: {
+	calendar: [
+		{
 			startTime: Date,
 			endTime: Date,
 			names: [String],
 		}
-	}],
+	],
 });
 
 var Groups = mongoose.model('groups', groupSchema);
