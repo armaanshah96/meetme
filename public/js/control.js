@@ -1,10 +1,5 @@
 $(document).ready(function() {
-	$('.testSend').click(function() {
-		$.get('http://localhost:3000/groups/591c73da47cbef756ce077fa/cal', {}, function(data) {
-			console.log(data);
-		});
-	});
-	
+
 	var eventInput;
 
 	// Initialize OAuth
@@ -63,55 +58,68 @@ $(document).ready(function() {
 	});
 
 
-	//Initialize group calendar
-	//var groupEvents = getGroupEvents().parseGroupEvents();
-	
 
+	var groupEvents;
 
-	var calendar_group = $('#calendar-group').fullCalendar({
-		// Create header - lets you switch calendar views
-			// Values separated by comma will be adjacent, separated by a space will have a small gap in between
-			// Note that these values are predefined templates, not personal names
-		header: {
-			left: 'prev,next today', // text containing the current month/week/day
-			center: 'title',
-			right: 'month, agendaWeek, agendaDay'
-		},
+	// Get group calendar events from database 
+	$.get('http://localhost:3000/groups/591c73da47cbef756ce077fa/cal', {}, function(data) {
+		return data; 
+	}).then(function(data) {
+		groupEvents = data;
 
-		defaultView:'agendaWeek',
+		//Parse group calendar into fullCalendar objects 
+		groupEvents = parseGroupEvents(groupEvents);
 
-		// Lets users highlight a timeslot by clicking and dragging
-		selectable: true,
-		// Creates a colored box while user is dragging
-		selectHelper: true,
-		//Whether clicking elsewhere will cause current selection to be cleared
-		unselectAuto: false,
+		// Render group calendar 
+		var calendar_group = $('#calendar-group').fullCalendar({
+			// Create header - lets you switch calendar views
+				// Values separated by comma will be adjacent, separated by a space will have a small gap in between
+				// Note that these values are predefined templates, not personal names
+			header: {
+				left: 'prev,next today', // text containing the current month/week/day
+				center: 'title',
+				right: 'month, agendaWeek, agendaDay'
+			},
 
-		// Runs when user selects a timeslot
-		select: function(start, end, allDay) {
+			defaultView:'agendaWeek',
 
-			calendar_group.fullCalendar('renderEvent',
-				{
-					title: "",
-					start: start,
-					end: end,
-					allDay: false
-				},
-				true // makes event stay permanently fixed - won't disappear if you go to another calendar page
-			);
+			// Lets users highlight a timeslot by clicking and dragging
+			selectable: true,
+			// Creates a colored box while user is dragging
+			selectHelper: true,
+			//Whether clicking elsewhere will cause current selection to be cleared
+			unselectAuto: false,
 
-			calendar_group.fullCalendar('unselect');
+			// Runs when user selects a timeslot
+			select: function(start, end, allDay) {
 
-		},
+				calendar_group.fullCalendar('renderEvent',
+					{
+						title: "",
+						start: start,
+						end: end,
+						allDay: false
+					},
+					true // makes event stay permanently fixed - won't disappear if you go to another calendar page
+				);
 
-		// Can change duration of event, move it around
-		editable: true,
+				calendar_group.fullCalendar('unselect');
 
-		// Pre-define events on calendar
-		events: eventInput,
+			},
 
+			// Can change duration of event, move it around
+			editable: true,
 
+			// Pre-define events on calendar
+			events: groupEvents,
+
+		});
 	});
+
+
+
+
+
 
 	// Client ID and API key from the Developer Console
 	var CLIENT_ID = '482233491751-ds1dm3a9mtd69mesprcthn470mjn6tq8.apps.googleusercontent.com';
@@ -139,14 +147,25 @@ $(document).ready(function() {
 
 	// *****************  FUNCTIONS *************************
 
-	function getGroupEvents() {
-		// query database and get the entry with the given link
+	// Parse group calendar database entry into fullCalendar events with shading based on number of people available 
+	function parseGroupEvents(events_unparsed) {
+		var event_list = [];
+		for (i = 0; i < events_unparsed.length; i++) {
+			var event_unparsed = events_unparsed[i];
+
+			var eventObj = {}; 
+			eventObj.title = "";
+			eventObj.start = event_unparsed.startTime; 
+			eventObj.end = event_unparsed.endTime; 
+			eventObj.allDay = false; 
+			eventObj.color = "red";
+
+			event_list.push(eventObj);
+		}
+		return event_list;
 	}
 
-	function parseGroupEvents() {
-		// parse group database entry into FullCalendar events 
-		// determine colors for number of people available 
-	}
+
 
 	function combineEvents() {
 		// combine events from group events and just added individual events 
@@ -197,13 +216,13 @@ $(document).ready(function() {
 			//if you re-authorize, removes all current events
 			$('#calendar-ind').fullCalendar( 'removeEvents');
 			$('#calendar-ind').fullCalendar( 'renderEvents', event_list, true);
-			$('#calendar-group').fullCalendar( 'renderEvents', event_list, true);
+			//$('#calendar-group').fullCalendar( 'renderEvents', event_list, true);
 		});
 		return true;
 	  } else {
 	    authorizeButton.style.display = 'block';
 	    signoutButton.style.display = 'none';
-			return false;
+		return false;
 	  }
 	}
 
