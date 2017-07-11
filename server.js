@@ -5,6 +5,10 @@ var bodyParser = require('body-parser');
 
 // var Groups = require('./models/groups');
 var mongoose = require('mongoose');
+var mongoDB = 'mongodb://localhost/db';
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Database connection error:'));
+
 var Env = require('dotenv');
 var fs = require('fs');
 //var mustache = require('express-mustache');
