@@ -61,16 +61,16 @@ $(document).ready(function() {
 
 	var groupEvents;
 
-	// Get group calendar events from database 
+	// Get group calendar events from database
 	$.get('http://localhost:3000/groups/591c73da47cbef756ce077fa/cal', {}, function(data) {
-		return data; 
+		return data;
 	}).then(function(data) {
 		groupEvents = data;
 
-		//Parse group calendar into fullCalendar objects 
+		//Parse group calendar into fullCalendar objects
 		groupEvents = parseGroupEvents(groupEvents);
 
-		// Render group calendar 
+		// Render group calendar
 		var calendar_group = $('#calendar-group').fullCalendar({
 			// Create header - lets you switch calendar views
 				// Values separated by comma will be adjacent, separated by a space will have a small gap in between
@@ -147,17 +147,17 @@ $(document).ready(function() {
 
 	// *****************  FUNCTIONS *************************
 
-	// Parse group calendar database entry into fullCalendar events with shading based on number of people available 
+	// Parse group calendar database entry into fullCalendar events with shading based on number of people available
 	function parseGroupEvents(events_unparsed) {
 		var event_list = [];
 		for (i = 0; i < events_unparsed.length; i++) {
 			var event_unparsed = events_unparsed[i];
 
-			var eventObj = {}; 
+			var eventObj = {};
 			eventObj.title = "";
-			eventObj.start = event_unparsed.startTime; 
-			eventObj.end = event_unparsed.endTime; 
-			eventObj.allDay = false; 
+			eventObj.start = event_unparsed.startTime;
+			eventObj.end = event_unparsed.endTime;
+			eventObj.allDay = false;
 			eventObj.color = "red";
 
 			event_list.push(eventObj);
@@ -168,8 +168,8 @@ $(document).ready(function() {
 
 
 	function combineEvents() {
-		// combine events from group events and just added individual events 
-		// at the end, replace the group database entry's calendar with this combined calendar 
+		// combine events from group events and just added individual events
+		// at the end, replace the group database entry's calendar with this combined calendar
 	}
 
 
