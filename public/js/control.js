@@ -62,15 +62,21 @@ $(document).ready(function() {
 	var groupEvents;
 
 	// Get group calendar events from database
-	$.get('http://localhost:3000/groups/591c73da47cbef756ce077fa/cal', {}, function(data) {
+	$.get('http://localhost:3000/groups/5a4d2147e0306906b144a386/cal', {}, function(data) {
 		return data;
 	}).then(function(data) {
 		groupEvents = data;
 
+    // WORKING ON:
 		//Parse group calendar into fullCalendar objects
 		groupEvents = parseGroupEvents(groupEvents);
 
-		// Render group calendar
+    // Get events newly added to individual calendar
+    var groupEvents2 = $('#calendar-ind').fullCalendar('clientEvents');
+    console.log(groupEvents2);
+    // Combine all total events and render
+
+    // Render group calendar
 		var calendar_group = $('#calendar-group').fullCalendar({
 			// Create header - lets you switch calendar views
 				// Values separated by comma will be adjacent, separated by a space will have a small gap in between
@@ -216,7 +222,8 @@ $(document).ready(function() {
 			//if you re-authorize, removes all current events
 			$('#calendar-ind').fullCalendar( 'removeEvents');
 			$('#calendar-ind').fullCalendar( 'renderEvents', event_list, true);
-			//$('#calendar-group').fullCalendar( 'renderEvents', event_list, true);
+			$('#calendar-group').fullCalendar( 'removeEvents');
+			$('#calendar-group').fullCalendar( 'renderEvents', event_list, true);
 		});
 		return true;
 	  } else {
@@ -244,14 +251,13 @@ $(document).ready(function() {
 
 	// Parse gCal events to FullCalendar events
 	function parseGCal() {
-	  parsedText = "";
 	  return gapi.client.calendar.events.list({
 	    'calendarId': 'primary',
 	    'timeMin': (new Date()).toISOString(),
 	    'showDeleted': false,
 	    'singleEvents': true,
-	    //'maxResults': 10,
-	    'orderBy': 'startTime'
+	    'orderBy': 'startTime',
+      //'maxResults': 30,
 	  }).then(function(response) {
 	    var events = response.result.items;
 
@@ -260,20 +266,23 @@ $(document).ready(function() {
 
 	    if (events.length > 0) {
 	      for (i = 0; i < events.length; i++) {
-	      	// Make String
+	      	// Make Event Object
 	        var event = events[i];
-	        var start = event.start.dateTime;
-	        var end = event.end.dateTime;
-	        parsedText += '{\n' + 'title: \'' + event.summary + '\',\nstart: \'' + start + '\',\nend: \'' + end + '\',\nallDay:false\n},';
 
-	        	// Make Object
-	        	var eventObj = {};
-	        	eventObj.title = event.summary;
-	        	eventObj.start = start;
-	        	eventObj.end = end;
-	        	eventObj.allDay = false;
+          var eventObj = {};
+          eventObj.title = event.summary;
+            // All-day events from Gcal
+          if (event.start.dateTime == null) {
+            eventObj.allDay = true;
+            eventObj.start = event.start.date;
+            eventObj.end = event.end.date;
+          } else {
+            eventObj.allDay = false;
+            eventObj.start = event.start.dateTime;
+            eventObj.end = event.end.dateTime;
+          }
 
-	        	event_list.push(eventObj)
+          event_list.push(eventObj);
 	      }
 	    }
 
