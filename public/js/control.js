@@ -62,7 +62,7 @@ $(document).ready(function() {
 	var groupEvents;
 
 	// Get group calendar events from database
-	$.get('http://localhost:3000/groups/5a4d2147e0306906b144a386/cal', {}, function(data) {
+	$.get('http://localhost:3000/groups/5a5641d6955ee90feb2fd94f/cal', {}, function(data) {
 		return data;
 	}).then(function(data) {
 		groupEvents = data;
